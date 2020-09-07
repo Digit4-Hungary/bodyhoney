@@ -1,0 +1,299 @@
+/* Saját stílus módosítások */
+
+/* Módosított Snipcart főszínek */
+:root {
+	--main-btn-font-color: #FFFFFF; /* betüszín módosítás, mivel a fő snipcart elem aranyra lett módosítva */
+	--main-background-color: #ffffe5;  /*   eredeti szín, ami nem csak háttérelemeket befolyásol: #f0f5f6   */
+	--main-background-color-box: #FFFBD9;  /* eredetileg fehér, bézs próba: #E8E5C5 */
+	--main-dark-color: #ba8748;
+	--main-dark-color-rgba: rgba(186, 135, 72, .3);
+	--main-light-color: #d29b34;
+	--main-light-color-rgba: rgba(210, 155, 52, .1);
+	--main-verylight-color: #fff8f0;
+  	--product-color: #8e8f32
+}
+/* Módosított Snipcart CSS elemek */
+.snipcart *{	
+	font-family: Mina;
+    letter-spacing: 0.5px;
+    color: var(--main-dark-color)
+}
+.snipcart__box {
+	background-color: var(--main-background-color-box)
+}
+.snipcart__box--badge{
+	border: 3px solid var(--main-background-color);
+	background-color: var(--main-background-color-box)
+}
+.snipcart__box--badge-highlight {
+	color: var(--main-btn-font-color);		
+	padding-top: 3px;	/* eltolás fentről, mivel a fő snipcart betütípus MINA lett  */
+	background: -webkit-gradient(linear, left top, right top, from(var(--main-dark-color)), to(var(--main-light-color)));
+	background: linear-gradient(90deg, var(--main-dark-color), var(--main-light-color));
+}
+.snipcart__box--gray {
+	background-color: var(--main-background-color-box) /*  eredetileg: #f7fafa  */
+}
+.snipcart__actions--link {
+	color: var(--main-light-color)
+}
+.snipcart__button--icon {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart__button--icon:active,
+.snipcart__button--icon:focus {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart__button--with-icon {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart__button--with-icon:active,
+.snipcart__button--with-icon:focus {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart__icon--blue-light path {
+	fill: var(--main-light-color)
+}
+.snipcart__icon--blue-dark path {
+	fill: var(--main-dark-color)
+}
+.snipcart-address-autocomplete--address {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart-cart__content {
+	background-color: var(--main-background-color)
+}
+.snipcart-cart__featured-payment-methods-title {
+	background-color: var(--main-background-color)
+}
+.snipcart-featured-payment-methods {
+	background-color: #FFFFFF	/* eredetileg: #f7fafa  */
+}
+.snipcart-featured-payment-methods__title {
+	background-color: var(--main-background-color)
+}
+.snipcart-forgot-password .snipcart-forgot-password__form{
+	background-color: var(--main-background-color-box)
+}
+.snipcart-item-line--cart-edit {
+	border-bottom: 1px solid var(--main-background-color)
+}
+.snipcart-item-line__container {
+	background-color: var(--main-background-color-box)
+}
+.snipcart-item-quantity__button:focus path {
+	fill: var(--main-light-color)
+}
+.snipcart-item-quantity__quantity {
+	border: 1px solid var(--main-background-color);
+	background-color: var(--main-background-color-box)
+}
+.snipcart-guest-checkout__link {
+	color: var(--main-light-color)
+}
+.snipcart-modal {
+	background-color: var(--main-background-color)
+}
+.snipcart-modal__container {
+	background-color: var(--main-background-color)
+}
+.snipcart-register__register-link {
+	color: var(--main-light-color)
+}
+.snipcart-register__forgot-password-link {
+	color: var(--main-light-color)
+}
+.snipcart-reset-password .snipcart-reset-password__form {
+	background-color: var(--main-background-color-box)
+}
+.snipcart-signin__register-link {
+	color: var(--main-light-color)
+}
+.snipcart-signin__forgot-password-link {
+	color: var(--main-light-color)
+}
+.snipcart-register .snipcart-register__form{
+	background-color: var(--main-background-color-box)
+}
+.snipcart-signin .snipcart-signin__form{
+	background-color: var(--main-background-color-box)
+}
+.snipcart-order__invoice-number--highlight {
+	color: var(--main-light-color)
+}
+.snipcart-payment-methods-list-item__button {
+	border: 1px solid var(--main-background-color);
+}
+.snipcart-cart-button--highlight {
+	background: -webkit-gradient(linear, left top, right top, from(var(--main-dark-color)), to(var(--main-light-color)));
+	background: linear-gradient(90deg, var(--main-dark-color), var(--main-light-color))
+}
+.snipcart-cart-button--highlight {
+	color: var(--main-btn-font-color)
+}
+.snipcart-cart-button--loading {
+	background-image: -webkit-gradient(linear, left top, right top, from(var(--main-dark-color)), to(var(--main-light-color)));
+	background-image: linear-gradient(90deg, var(--main-dark-color), var(--main-light-color))
+}
+.snipcart-cart-button--secondary {
+	background: -webkit-gradient(linear, left top, right top, from(var(--main-dark-color)), to(var(--main-light-color)));
+	background: linear-gradient(90deg, var(--main-dark-color), var(--main-light-color))
+}
+.snipcart-cart-button--secondary {
+	color: var(--main-btn-font-color)	/* eredeti szövegszín: #989ba3  */ 
+}
+.snipcart-cart-button--secondary .snipcart__icon path {
+	fill: var(--main-btn-font-color)	/* eredeti nyilszín: #989ba3  */ 
+}
+.snipcart-shipping-rates-list-item {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart-shipping-rates-list-item:focus-within {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart-shipping-rates-list-item--highlight {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart-tool-tip {
+	box-shadow: 0 12px 24px var(--main-verylight-color)
+}
+.snipcart-typeahead__suggestion--loading {
+	color: var(--main-dark-color);
+}
+.snipcart-typeahead__suggestion--secondary {
+	color: var(--main-dark-color)
+}
+.snipcart-discount-box {
+	background-color: var(--main-background-color)
+}
+.snipcart-discount-box__button:focus {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart-discount-box__form {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart-discount-box__submit {
+	color: var(--main-light-color)
+}
+.snipcart-discount-box__form--success {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart-checkbox:focus+label:before,
+.snipcart-checkbox:hover+label:before {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart-checkbox:checked+label:before {
+	border: 1px solid var(--main-light-color);
+	background-color: var(--main-light-color);
+	box-shadow: 0 2px 3px var(--main-dark-color-rgba)
+}
+.snipcart-error-message__action {
+	color: var(--main-light-color)
+}
+.snipcart-form__select {
+	border: 1px solid var(--main-background-color)	
+}
+.snipcart-form__select:focus {
+	border: 1px solid var(--main-light-color)
+}
+.snipcart-form__separator {
+	background: var(--main-background-color)
+}
+.snipcart-input {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart-input:focus-within {
+	outline: none;
+	border: 1px solid var(--main-light-color);
+	box-shadow: 0 12px 24px 0 var(--main-verylight-color)
+}
+.snipcart-form-radio:checked+label:before {
+	background: -webkit-gradient(linear, left top, right top, from(var(--main-dark-color)), to(var(--main-light-color)));
+	background: linear-gradient(90deg, var(--main-dark-color), var(--main-light-color))
+}
+.snipcart-layout__footer {
+	background-color: var(--main-background-color)
+}
+.snipcart-textbox--focus {
+	border: 1px solid var(--main-light-color);
+	box-shadow: 0 12px 24px 0 var(--main-verylight-color)
+}
+.snipcart-textarea-custom-field[data-v-68af19e0] {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart-text-custom-field {
+	border: 1px solid var(--main-background-color)
+}
+.snipcart-flash-message--info {
+	background-color: var(--main-light-color-rgba)
+}
+  
+.snipcart-cart-header {
+   background-color: var(--main-background-color)
+}
+.snipcart__icon--default {
+	width: 45vw;
+	max-width: 450px
+}
+.snipcart-cart-summary {
+	background-color: #FFFFFF /*  eredetileg: #f8fafa */
+}
+.snipcart-cart-summary__content {
+	background-color: var(--main-background-color-box);
+}  
+.snipcart-cart-summary-expanded-item--secondary {
+	margin-left: 0px
+}
+.snipcart-cart-summary-expanded-item--secondary:last-child {
+	margin-top: -3px
+}
+.snipcart-cart-summary__separator {
+	background: var(--main-background-color)
+}
+.snipcart-error-message {
+	color: #d93120
+}
+/* Innentől a saját plusz elemek */
+.snipcart-payment-methods-list-item__button:hover{
+	border: 1px solid;
+  	border-image-slice: 1;
+  	border-width: 1px;
+	border-image-source: linear-gradient(to right, var(--main-dark-color), var(--main-light-color))
+}
+.noscript{
+	width: 100%;
+	height: 1000%
+} 
+.noscript p{
+	font-size: 150px;
+	position: fixed;
+	text-align: center
+}
+  
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none
+}
+  
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none  /* Firefox */
+}
+
+/* DB szám rublika plusz CSS */
+.quantity {
+    /*font-size: 3em;*/
+    border: none;
+    /*width: 50px;
+    height: 50px;*/
+    background: transparent;
+    text-align: center
+}
+  
+/* DB szám rublikának ne legyenek nyilai */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0
+}
