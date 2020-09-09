@@ -1,4 +1,4 @@
-//Főoldal linkje
+//Főoldal linkje v2
     const mainPageLink = "https://www.bodyhoney.com";
 //Oldal szélesség és magasság
   	const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
@@ -74,6 +74,22 @@ document.addEventListener('snipcart.ready', function() {
         itemUpdated(cartItem);
     });
 
+    Snipcart.events.on('theme.routechanged', (routesChange) => {
+        if (routesChange.from === "/cart" && routesChange.to === "/checkout") {
+            console.log('tovább a fizetéshez gomb lekattintva');
+            goToCheckout();
+        };      
+        /*
+        if (routesChange.from === "/" && routesChange.to !== "/") {
+            console.log('cart opened');
+            cartOpened();
+        };
+        if (routesChange.from !== "/" && routesChange.to === "/") {
+            console.log('cart closed');
+            cartClosed();
+        }
+        */
+    })
     Snipcart.events.on('shipping.selected', (shippingMethod) => {
        console.log("shipping selected event triggered");
        console.log(shippingMethod)
@@ -94,24 +110,7 @@ document.addEventListener('snipcart.ready', function() {
         console.log("summary checkout event triggered");
         cartOpened();
     });
-    */
-    Snipcart.events.on('theme.routechanged', (routesChange) => {
-      if (routesChange.from === "/cart" && routesChange.to === "/checkout") {
-          console.log('tovább a fizetéshez gomb lekattintva');
-          goToCheckout();
-      };      
-      /*
-      if (routesChange.from === "/" && routesChange.to !== "/") {
-          console.log('cart opened');
-          cartOpened();
-      };
-      if (routesChange.from !== "/" && routesChange.to === "/") {
-          console.log('cart closed');
-          cartClosed();
-      }
-      */
-    })
-    /*
+
     Snipcart.events.on('page.change', function(page) {
         pageChanged(page);
     });
@@ -186,6 +185,20 @@ function itemUpdated(cartItem){
     });
 };
 
+function goToCheckout(){
+    console.log("goToCheckout function");
+    dataLayer.push({
+        event: 'snipcartEvent',
+        eventCategory: 'Checkout',
+        eventAction: 'Tovább az adatmegadáshoz',
+        ecommerce: {
+            cartopen: {
+                //products: createProductsFromItems(Snipcart.api.items.all())
+            }
+        }
+    });
+};
+
 function shippingSelected(shippingMethod){
     console.log("shipping selected function");
     dataLayer.push({
@@ -211,11 +224,15 @@ function orderCompleted(order){
     console.log("order.taxes.items[0].amount = "+order.taxes.items[0].amount);
     console.log("order.shippingDetails.cost = "+order.shippingDetails.cost);
     console.log("order.invoiceNumber = "+order.invoiceNumber);
-    console.log("order.user.id = "+order.user.id);    */
+    console.log("order.user.id = "+order.user.id);    
+    console.log(order.items);
+    console.log(order.items.items);*/
     dataLayer.push({
         event: 'snipcartEvent',
-        eventCategory: 'Checkout',
+        eventCategory: 'Order Completed',
         eventAction: 'Rendelés leadva',
+        eventLabel: order.paymentDetails.display,
+        eventValue: order.total,
         ecommerce: {
             currencyCode: order.currency,
             purchase: {
@@ -227,7 +244,7 @@ function orderCompleted(order){
                     shipping: order.shippingDetails.cost,
                     invoiceNumber: order.invoiceNumber
                 },
-                //products: createProductsFromItems(order.items),
+                products: createProductsFromItems(order.items.items),
                 //userId: order.user.id
             }
         }
@@ -259,19 +276,6 @@ function cartConfirmError(confirmError){
     });
 };
 */
-function goToCheckout(){
-    console.log("goToCheckout function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Checkout',
-        eventAction: 'Tovább az adatmegadáshoz',
-        ecommerce: {
-            cartopen: {
-                //products: createProductsFromItems(Snipcart.api.items.all())
-            }
-        }
-    });
-};
 /*
 function cartOpened(){
     console.log("cartOpened function");
@@ -316,9 +320,10 @@ function pageChanged(page){
 */
 function createProductsFromItems (items) {
     return items.map(function (item) {
-        console.log("name: "+item.name+", description: "+item.description+", id: "+item.id+", price: "+item.price+", quantity: "+item.quantity)
+        console.log("name: "+item.name+", category: "+item.categories[0]+", description: "+item.description+", id: "+item.id+", price: "+item.price+", quantity: "+item.quantity)
         return {
             name: item.name,
+            category: item.categories[0],
             description: item.description,
             id: item.id,
             price: item.price,
