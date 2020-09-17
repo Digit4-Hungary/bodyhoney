@@ -1,20 +1,4 @@
 //Betöltőképernyőhöz
-var focus;
-function outFocus() {
-	focus = false;
-	//console.log(focus)
-};
-function onFocus(){
-  focus = true;
-	//console.log(focus)
-};
-if (/*@cc_on!@*/false) { // check for Internet Explorer
-	document.onfocusin = onFocus;
-	document.onfocusout = outFocus;
-} else {
-	window.onfocus = onFocus;
-	window.onblur = outFocus;
-};
 
 function downloadCheckerXHR() {
     var origOpen = XMLHttpRequest.prototype.open;
@@ -43,8 +27,17 @@ function startOpenAnimation() {
       window.mainLotties.rotateJSON = "load...";
       lottiePreDownload("main", "rotate")
     };
-    if (focus !== false) {  
-        //console.log("start animáció indul");
+    var focus;
+    if (/*@cc_on!@*/false) { // check for Internet Explorer
+      document.onfocusin = function(){focus = true};
+      document.onfocusout = function(){focus = false};
+    } else {
+      window.onfocus = function(){focus = true};
+      window.onblur = function(){focus = false};
+    };
+    if (focus !== false) {
+        console.log("startOpenAnimation funkción belül focus = "+focus)  
+        console.log("start animáció indul");
         setTimeout(function(){ 
         	document.getElementById("start-window-open").click();
         }, 2000);
@@ -64,11 +57,11 @@ function startOpenAnimation() {
           document.getElementById("start-falling-lottie").click();
           document.getElementById("second-section").style.setProperty("position", "absolute");
           document.getElementById("triggers").style.setProperty("position", "absolute");
-          //cookieScriptLoad();          
+          cookieScriptLoad();          
         }, 7400)      
     } else {
        setTimeout(function() {
-         //console.log("start animáció késleltetés");
+         console.log("start animáció késleltetés");
          startOpenAnimation()
        }, 200)
     }

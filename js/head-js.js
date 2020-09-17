@@ -1,7 +1,9 @@
-//Főoldal linkje v2
-    const mainPageLink = "https://www.bodyhoney.com";
+//Főoldal linkje
+        const mainPageLink = "https://www.bodyhoney.com";
+//Meghívó ember kódja:
+        const affiliation = 'Organikus keresésből jött';
 //Oldal szélesség és magasság
-  	const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+  	    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 		const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth  || 0);
 //Lottie url-ek
 var mainLotties = {
@@ -48,286 +50,267 @@ var soapLotties = [{
         slideJSON: null
 }];
 
-//Snipcart eseménylog
-document.addEventListener('snipcart.ready', function() {
-    //console.log("snipcart ready");
+//GTM datalayer beállítások ---------------------------------------------------------------------------------------------------------------------------
+    //Snipcart eseményfigyelők
+        document.addEventListener('snipcart.ready', function() {
+            //console.log("snipcart ready");
+            Snipcart.events.on('item.added',  (cartItem) => {
+                console.log("item added event triggered");
+                itemAdded(cartItem);
+            });
 
-    //Subscribing to different events
-    /*Snipcart.events.on('cart.created', (cartState) => {
-        console.log("cart created event triggered");
-        console.log(cartState);
-    });
-    */
+            Snipcart.events.on('item.removed', (cartItem) =>  {
+                console.log("item removed event triggered");    
+                itemRemoved(cartItem);
+            });
 
-    Snipcart.events.on('item.added',  (cartItem) => {
-        console.log("item added event triggered");
-        itemAdded(cartItem);
-    });
+            Snipcart.events.on('item.updated', (cartItem) => {
+                console.log("item updated event triggered");
+                itemUpdated(cartItem);
+            });
 
-    Snipcart.events.on('item.removed', (cartItem) =>  {
-        console.log("item removed event triggered");    
-        itemRemoved(cartItem);
-    });
+            Snipcart.events.on('theme.routechanged', (routesChange) => {
+                if (routesChange.from === "/cart" && routesChange.to === "/checkout") {
+                    console.log('tovább a fizetéshez gomb lekattintva');
+                    goToCheckout();
+                    setTimeout(function(){ addToSnipcartButtons() }, 1000)
+                };      
+                /*
+                if (routesChange.from === "/" && routesChange.to !== "/") {
+                    console.log('cart opened');
+                    cartOpened();
+                };*/
+                if (routesChange.from === "/checkout" && routesChange.to === "/") {
+                    console.log('cart closed');
+                    clearInterval(addToPaymentButtonsInterval)
+                }
+                
+            })
+            Snipcart.events.on('shipping.selected', (shippingMethod) => {
+            console.log("shipping selected event triggered");
+            console.log(shippingMethod)
+            shippingSelected(shippingMethod);
+            });
 
-    Snipcart.events.on('item.updated', (cartItem) => {
-        console.log("item updated event triggered");
-        itemUpdated(cartItem);
-    });
+            Snipcart.events.on('cart.confirmed',  (cartConfirmResponse) => {
+                console.log("cart confirmed event triggered");
+                orderCompleted(cartConfirmResponse);
+            });
+            /*
+            Snipcart.events.on('cart.confirm.error', (confirmError) => {
+                console.log("cart confirm error event triggered");
+                cartConfirmError(confirmError);
+            });
 
-    Snipcart.events.on('theme.routechanged', (routesChange) => {
-        if (routesChange.from === "/cart" && routesChange.to === "/checkout") {
-            console.log('tovább a fizetéshez gomb lekattintva');
-            goToCheckout();
-        };      
+            Snipcart.events.on('summary.checkout_clicked', () => {
+                console.log("summary checkout event triggered");
+                cartOpened();
+            });
+
+            Snipcart.events.on('page.change', function(page) {
+                pageChanged(page);
+            });
+            */
+        });
+        
+    //Funkciók az eseményekhez
+        function itemAdded(cartItem){
+            console.log("item added function");
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Kosár frissítve',
+                eventAction: 'Termék hozzáadva a kosárhoz',
+                eventLabel: cartItem.name,
+                eventValue: cartItem.price,
+                ecommerce: {
+                    currencyCode: window.currency,
+                    add: {
+                        products: createProductsFromItems([cartItem])
+                    }
+                }
+            });
+        };
+
+        function itemRemoved(cartItem){
+            console.log("item removed function");
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Kosár frissítve',
+                eventAction: 'Termék eltávolítva a kosárból',
+                eventLabel: cartItem.name,
+                eventValue: cartItem.price,
+                ecommerce: {
+                    currencyCode: window.currency,
+                    remove: {
+                        products: createProductsFromItems([cartItem])
+                    }
+                }
+            });
+        };
+
+        function itemUpdated(cartItem){
+            console.log("item updated function");
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Kosár frissítve',
+                eventAction: 'Termék frissítve',
+                eventLabel: cartItem.name,
+                eventValue: cartItem.price,
+                ecommerce: {
+                    currencyCode: window.currency,
+                    remove: {
+                        products: createProductsFromItems([cartItem])
+                    }
+                }
+            });
+        };
+
+        function goToCheckout(){
+            console.log("goToCheckout function");
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Checkout',
+                eventAction: 'Tovább az adatmegadáshoz',
+                /*ecommerce: {
+                    cartopen: {
+                        products: createProductsFromItems(Snipcart.api.items.all())
+                    }
+                }*/
+            });
+        };
+
+        function shippingSelected(shippingMethod){
+            console.log("shipping selected function");
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Checkout',
+                eventAction: 'Szállítás kiválasztva',
+                eventLabel: shippingMethod.method,
+                eventValue: shippingMethod.cost
+               /* ecommerce: {
+                    currencyCode: window.currency,
+                    remove: {
+                        products: createProductsFromItems([cartItem])
+                    }
+                }*/
+            });
+        };
+
+        function orderCompleted(order){
+            console.log("cart confirmed function");
+            console.log(order);
+            /*console.log("order.currency = "+order.currency);
+            console.log("order.total = "+order.total);
+            console.log("order.taxes.items[0].amount = "+order.taxes.items[0].amount);
+            console.log("order.shippingDetails.cost = "+order.shippingDetails.cost);
+            console.log("order.invoiceNumber = "+order.invoiceNumber);
+            console.log("order.user.id = "+order.user.id);    
+            console.log(order.items);
+            console.log(order.items.items);*/
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Order Completed',
+                eventAction: 'Rendelés leadva',
+                eventLabel: order.paymentDetails.display,
+                eventValue: order.total,
+                ecommerce: {
+                    currencyCode: order.currency,
+                    purchase: {
+                        actionField: {
+                            id: order.token,
+                            affiliation: affiliation,
+                            //discount: 
+                            revenue: order.total,
+                            tax: order.taxes.items[0].amount,
+                            shipping: order.shippingDetails.cost,
+                            invoiceNumber: order.invoiceNumber
+                        },
+                        products: createProductsFromItems(order.items.items),
+                        //userId: order.user.id
+                    }
+                }
+            });
+        };
         /*
-        if (routesChange.from === "/" && routesChange.to !== "/") {
-            console.log('cart opened');
-            cartOpened();
+        function cartConfirmError(confirmError){
+            console.log("cart confirm error function");
+            console.log(confirmError)
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Rendelés',
+                eventAction: 'Rendelés jóváhagyási hiba',
+                ecommerce: {
+                    currencyCode: order.currency,
+                    purchase: {
+                        actionField: {
+                            id: order.token,
+                            affiliation: window.affiliation,
+                            revenue: order.total,
+                            tax: order.taxesTotal,
+                            shipping: order.shippingInformation.fees,
+                            invoiceNumber: order.invoiceNumber
+                        },
+                        products: createProductsFromItems(order.items),
+                        userId: order.user.id
+                    }
+                }
+            });
         };
-        if (routesChange.from !== "/" && routesChange.to === "/") {
-            console.log('cart closed');
-            cartClosed();
-        }
         */
-    })
-    Snipcart.events.on('shipping.selected', (shippingMethod) => {
-       console.log("shipping selected event triggered");
-       console.log(shippingMethod)
-       shippingSelected(shippingMethod);
-    });
-
-    Snipcart.events.on('cart.confirmed',  (cartConfirmResponse) => {
-        console.log("cart confirmed event triggered");
-        orderCompleted(cartConfirmResponse);
-    });
-    /*
-    Snipcart.events.on('cart.confirm.error', (confirmError) => {
-        console.log("cart confirm error event triggered");
-        cartConfirmError(confirmError);
-    });
-
-    Snipcart.events.on('summary.checkout_clicked', () => {
-        console.log("summary checkout event triggered");
-        cartOpened();
-    });
-
-    Snipcart.events.on('page.change', function(page) {
-        pageChanged(page);
-    });
-    */
-});
-/*
-function cartCreated(cartState){
-    console.log("cartCreated function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Kosár létrehozva',
-        eventAction: 'Kosár létrehozva',
-        eventLabel: cartState.name,
-        eventValue: cartState.price,
-        ecommerce: {
-            currencyCode: window.currency,
-            add: {
-               products: createProductsFromItems([cartState])
-            }
-        }
-    });
-};
-*/
-function itemAdded(cartItem){
-    console.log("item added function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Kosár frissítve',
-        eventAction: 'Termék hozzáadva a kosárhoz',
-        eventLabel: cartItem.name,
-        eventValue: cartItem.price,
-        ecommerce: {
-            currencyCode: window.currency,
-            add: {
-               products: createProductsFromItems([cartItem])
-            }
-        }
-    });
-};
-
-function itemRemoved(cartItem){
-    console.log("item removed function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Kosár frissítve',
-        eventAction: 'Termék eltávolítva a kosárból',
-        eventLabel: cartItem.name,
-        eventValue: cartItem.price,
-        ecommerce: {
-            currencyCode: window.currency,
-            remove: {
-                products: createProductsFromItems([cartItem])
-            }
-        }
-    });
-};
-
-function itemUpdated(cartItem){
-    console.log("item updated function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Kosár frissítve',
-        eventAction: 'Termék frissítve',
-        eventLabel: cartItem.name,
-        eventValue: cartItem.price,
-        ecommerce: {
-            currencyCode: window.currency,
-            remove: {
-                products: createProductsFromItems([cartItem])
-            }
-        }
-    });
-};
-
-function goToCheckout(){
-    console.log("goToCheckout function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Checkout',
-        eventAction: 'Tovább az adatmegadáshoz',
-        ecommerce: {
-            cartopen: {
-                //products: createProductsFromItems(Snipcart.api.items.all())
-            }
-        }
-    });
-};
-
-function shippingSelected(shippingMethod){
-    console.log("shipping selected function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Checkout',
-        eventAction: 'Szállítás kiválasztva',
-        eventLabel: shippingMethod.method,
-        eventValue: shippingMethod.cost,
-        ecommerce: {
-            currencyCode: window.currency,
-            remove: {
-                //products: createProductsFromItems([cartItem])
-            }
-        }
-    });
-};
-
-function orderCompleted(order){
-    console.log("cart confirmed function");
-    console.log(order);
-    /*console.log("order.currency = "+order.currency);
-    console.log("order.total = "+order.total);
-    console.log("order.taxes.items[0].amount = "+order.taxes.items[0].amount);
-    console.log("order.shippingDetails.cost = "+order.shippingDetails.cost);
-    console.log("order.invoiceNumber = "+order.invoiceNumber);
-    console.log("order.user.id = "+order.user.id);    
-    console.log(order.items);
-    console.log(order.items.items);*/
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Order Completed',
-        eventAction: 'Rendelés leadva',
-        eventLabel: order.paymentDetails.display,
-        eventValue: order.total,
-        ecommerce: {
-            currencyCode: order.currency,
-            purchase: {
-                actionField: {
-                    id: order.token,
-                    affiliation: 'Website',
-                    revenue: order.total,
-                    tax: order.taxes.items[0].amount,
-                    shipping: order.shippingDetails.cost,
-                    invoiceNumber: order.invoiceNumber
-                },
-                products: createProductsFromItems(order.items.items),
-                //userId: order.user.id
-            }
-        }
-    });
-};
-/*
-function cartConfirmError(confirmError){
-    console.log("cart confirm error function");
-    console.log(confirmError)
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Rendelés',
-        eventAction: 'Rendelés jóváhagyási hiba',
-        ecommerce: {
-            currencyCode: order.currency,
-            purchase: {
-                actionField: {
-                    id: order.token,
-                    affiliation: 'Website',
-                    revenue: order.total,
-                    tax: order.taxesTotal,
-                    shipping: order.shippingInformation.fees,
-                    invoiceNumber: order.invoiceNumber
-                },
-                products: createProductsFromItems(order.items),
-                userId: order.user.id
-            }
-        }
-    });
-};
-*/
-/*
-function cartOpened(){
-    console.log("cartOpened function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Kosár megnyitása',
-        eventAction: 'Kosár megnyitása',
-        ecommerce: {
-            cartopen: {
-                //products: createProductsFromItems(Snipcart.api.items.all())
-            }
-        }
-    });
-};
-
-function cartClosed(){
-    console.log("cartClosed function");
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Cart Action',
-        eventAction: 'Cart Closed',
-        ecommerce: {
-            cartclose: {
-                //products: createProductsFromItems(Snipcart.api.items.all())
-            }
-        }
-    });
-};
-
-function pageChanged(page){
-    dataLayer.push({
-        event: 'snipcartEvent',
-        eventCategory: 'Page Change',
-        eventAction: page,
-        ecommerce: {
-            checkout: {
-                products: createProductsFromItems(Snipcart.api.items.all())
-            }
-        }
-    });
-};
-*/
-function createProductsFromItems (items) {
-    return items.map(function (item) {
-        console.log("name: "+item.name+", category: "+item.categories[0]+", description: "+item.description+", id: "+item.id+", price: "+item.price+", quantity: "+item.quantity)
-        return {
-            name: item.name,
-            category: item.categories[0],
-            description: item.description,
-            id: item.id,
-            price: item.price,
-            quantity: item.quantity
+        /*
+        function cartOpened(){
+            console.log("cartOpened function");
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Kosár megnyitása',
+                eventAction: 'Kosár megnyitása',
+                ecommerce: {
+                    cartopen: {
+                        //products: createProductsFromItems(Snipcart.api.items.all())
+                    }
+                }
+            });
         };
-    });
-}
+
+        function cartClosed(){
+            console.log("cartClosed function");
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Cart Action',
+                eventAction: 'Cart Closed',
+                ecommerce: {
+                    cartclose: {
+                        //products: createProductsFromItems(Snipcart.api.items.all())
+                    }
+                }
+            });
+        };
+
+        function pageChanged(page){
+            dataLayer.push({
+                event: 'snipcartEvent',
+                eventCategory: 'Page Change',
+                eventAction: page,
+                ecommerce: {
+                    checkout: {
+                        products: createProductsFromItems(Snipcart.api.items.all())
+                    }
+                }
+            });
+        };
+        */
+
+    //Termék adatok kibontása
+        function createProductsFromItems (items) {
+            return items.map(function (item) {
+                console.log("name: "+item.name+", category: "+item.categories[0]+", description: "+item.description+", id: "+item.id+", price: "+item.price+", quantity: "+item.quantity)
+                return {
+                    name: item.name,
+                    category: item.categories[0],
+                    description: item.description,
+                    id: item.id,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            });
+        }
