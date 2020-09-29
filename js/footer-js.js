@@ -94,6 +94,9 @@ function signInButtonOnclick2() {
        // console.log("signInButtonOnclick2() ok")
     }, 500)
 };
+//Navbar Termékek gomb javítás
+var navbarProductLink = document.getElementById("navbar-product-link");
+navbarProductLink.setAttribute("onclick", "doubleClick(this)");
 
 function doubleClick(clickedElement) {
     clickedElement.click()
@@ -224,7 +227,7 @@ function doubleClick(clickedElement) {
           //var szamlalo3 =1
           var productLinks = document.getElementsByClassName("product-link");
           var clickedElement = productLinks[0];
-          console.log(clickedElement);
+          //console.log(clickedElement);
           var animType = clickedElement.getAttribute("animType");
           var soapName = clickedElement.getAttribute("productName");
           window.szappan = soapName;
