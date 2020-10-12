@@ -23,6 +23,9 @@ if (nyelv == "hu"){
         confirmation: {
             thank_you_for_your_order: "Köszönjük a megrendelést!"
         },
+        errors: {
+            customer_not_found: "A megadott email címmel nem található felhasználó."
+        },
         forgot_password_form: {
             title: "Jelszóvisszaállítás",
             instructions: "Add meg a regisztrált email címedet és küldünk egy jelszó visszaállítási linket",
@@ -47,7 +50,8 @@ if (nyelv == "hu"){
             methods: {
               deferred_payment: "Fizetés utánvéttel"  
             },
-            processing_payment: "Átirányítás a fizetési oldalra. Türelem, ez eltarthat pár másodpercig is..."                 }
+            processing_payment: "Átirányítás a fizetési oldalra. Türelem, ez eltarthat pár másodpercig is..."                 
+        }
     });
 });
 } else if (nyelv == "sk"){

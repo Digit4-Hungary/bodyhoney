@@ -1,70 +1,75 @@
-// userID check és mentés cookie-ba
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires="+d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires;
+//Oldal szélesség és magasság
+    window.vh,
+    window.vw,
+    window.currentAspectRatio;
+
+    function viewPortParams() {
+        vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth  || 0);
+        currentAspectRatio = vw/vh;
+        console.log("szélesség = "+vw+", magasság = "+vh+", oldalarány = "+currentAspectRatio)
     };
 
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    };
-  
-    function checkCookie() {
-        var user = getCookie("userID");
-        if (user != "") {
-            alert("Welcome again " + user);
+
+    var mobilAspectRatio = window.matchMedia("(max-aspect-ratio: 13/20)");
+    
+    function handleAspectRatioChange(evt) {
+        if (evt.matches) {
+            console.log("mobil álló képernyőarány")
         } else {
-            var user = uniqueIDgen();
-            if (user != "" && user != null) {
-                setCookie("userID", user, 365);
-            }
-        }
+            console.log("nem mobil álló képernyőarány")
+        };
+        viewPortParams()
     };
-  
-    function uniqueIDgen(){
-        // always start with a letter (for DOM friendlyness)
-        var idstr=String.fromCharCode(Math.floor((Math.random()*25)+65));
-        do {                
-            // between numbers and characters (48 is 0 and 90 is Z (42-48 = 90)
-            var ascicode=Math.floor((Math.random()*42)+48);
-            if (ascicode<58 || ascicode>64){
-                // exclude all chars between : (58) and @ (64)
-                idstr+=String.fromCharCode(ascicode);    
-            }                
-        } while (idstr.length<32);
+
+    handleAspectRatioChange(mobilAspectRatio);
+
+    mobilAspectRatio.addEventListener( "change", (e) => {
+        if (e.matches) {
+            console.log("mobil álló képernyőarány")
+        } else {
+            console.log("nem mobil álló képernyőarány")
+        };
+        viewPortParams()
+    });
+
+/*Képernyő tájolás detektálás
+    var mediaQueryPortrait = window.matchMedia("(orientation: portrait)");
     
-        return (idstr);
+    function handleOrientationChange(evt) {
+        if (evt.matches) {
+            console.log("álló helyzet")
+        } else {
+            console.log("fekvő helyzet")
+        };
+        viewPortParams()
     };
-    
-    checkCookie()
+
+    handleOrientationChange(mediaQueryPortrait);
+
+    mediaQueryPortrait.addEventListener( "change", (e) => {
+        if (e.matches) {
+            console.log("álló helyzet")
+        } else {
+            console.log("fekvő helyzet")
+        };
+        viewPortParams()
+    });
+*/
 
 //Főoldal linkje
-        const mainPageLink = "https://www.bodyhoney.com";
+    const mainPageLink = "https://www.bodyhoney.com";
 //Meghívó ember kódja:
-        const affiliation = 'Organikus keresésből jött';
-//Oldal szélesség és magasság
-  	    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-		const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth  || 0);
+    const affiliation = 'Organikus keresésből jött';
+
 //Lottie url-ek
-var mainLotties = {
+    var mainLotties = {
     	rotateURL: "https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5ef8a85732df4658888cbf20_Forg%C3%A1s%20loop%20vaj%20h%C3%A1tt%C3%A9r%20(Bodymovin%2070%25).json",
       	rotateJSON: null,
       	scrollURL: "https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5ef8a85732df465aef8cbf21_G%C3%B6rget%C3%A9sre%20p%C3%B6rg%C3%A9s%20(Bodymovin%2070%25).json",
       	scrollJSON: null
-    };
-var soapLotties = [{
+        };
+    var soapLotties = [{
         name: "citromfuves",
         hoverURL: "https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5ef8cb93ad13582abc0dc2e7_Citromf%C3%BCves%20balra%20befordul%C3%A1s%2050F%20(70%25).json",
      	hoverJSON: null,
@@ -100,7 +105,7 @@ var soapLotties = [{
         hoverJSON: null,
         slideURL: "https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5f243486549ce7d9c943e25c_Kamill%C3%A1s%20jobbra%20cs%C3%BAsz%C3%A1s%2041F%20(80%25).json",
         slideJSON: null
-}];
+    }];
 
 //GTM datalayer beállítások ---------------------------------------------------------------------------------------------------------------------------
     //Snipcart eseményfigyelők
@@ -124,7 +129,7 @@ var soapLotties = [{
             Snipcart.events.on('theme.routechanged', (routesChange) => {
                 if (routesChange.from === "/cart" && routesChange.to === "/checkout") {
                     console.log('tovább a fizetéshez gomb lekattintva');
-                    setTimeout(function(){ 
+                    setTimeout(function(){
                         goToCheckout();
                         addToSnipcartButtons()
                      }, 1000)
