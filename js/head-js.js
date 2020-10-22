@@ -1,7 +1,11 @@
+// iOS detektálás:
+    const isIOSDevice = !!navigator.platform.match(/iPhone|iPod|iPad/);
+
 //Oldal szélesség és magasság
     window.vh,
     window.vw,
-    window.currentAspectRatio;
+    window.currentAspectRatio
+    window.mobilAspectRatio;
 
     function viewPortParams() {
         vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
@@ -11,7 +15,7 @@
     };
 
 
-    var mobilAspectRatio = window.matchMedia("(max-aspect-ratio: 13/20)");
+    mobilAspectRatio = window.matchMedia("(max-aspect-ratio: 13/20)");
     
     function handleAspectRatioChange(evt) {
         if (evt.matches) {

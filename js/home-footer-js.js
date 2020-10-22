@@ -74,7 +74,7 @@
       //var hoverLottiePLayer= document.getElementById("hover-lottie-"+soapName);
       // var slideLottie = document.getElementById("slide-lottie-"+soapName);
     // Csak ha nem mobilnézet
-      if (window.matchMedia("(min-width: 480px)").matches) {
+      if (mobilAspectRatio.matches == false) {
         var whichLottieObj = window.soapLotties.find(el => el.name === soapName);
         if (animType == "hover") {      
               var json = whichLottieObj.hoverJSON;
@@ -193,33 +193,35 @@
         productLinks[i].setAttribute("onclick", "productDescriptionIcon(this)");
         productLinks[i].setAttribute("animType", "hover");
         productLinks[i].addEventListener("mouseenter", function( event ) {
-            //var animType = event.target.getAttribute("animType");
-            var animType = "hover";
-            var soapName = event.target.getAttribute("productName");
-          //  console.log("Egérhúzásra előtöltés és attribútumok hozzáadása "+soapName, animType);
-            var whichLottieObj = window.soapLotties;
-          //  console.log(whichLottieObj);
-            var jsonType = animType+"JSON";
-          //  console.log("jsonType= "+jsonType);
-            var json = whichLottieObj.find(el => el.name === soapName)[jsonType];
-          //  console.log("json: "+ json + " , " + jsonType);
-          //  console.log("preLoadWorking= "+window.preLoadWorking);
-            if (json == null) {
-                json = "loading..."
-          //      console.log("preLoadWorking egyenlő true-val");
-          //      console.log("preLoadWorking ="+window.preLoadWorking);
-                if(preLoadWorking == true ) {
-                    preLoadWorking == false;
-          //          console.log("json ="+json)
-                    lottiePreDownload(soapName, "hover");
-          //          console.log("lottiePreDownload "+soapName, animType)
-                } else {
-          //          console.log("json nem egyenéő null, így nem tölti újra le a "+soapName, animType);
-                    window.preLoadWorking == true
-                }
-            } else {
-          //      console.log("preLoadWorking nem egyenlő true, így nem tölti újra le a "+soapName, animType);
-            }    
+          if (mobilAspectRatio.matches == false) {
+              //var animType = event.target.getAttribute("animType");
+              var animType = "hover";
+              var soapName = event.target.getAttribute("productName");
+              //console.log("Egérhúzásra előtöltés és attribútumok hozzáadása "+soapName, animType);
+              var whichLottieObj = window.soapLotties;
+              //console.log(whichLottieObj);
+              var jsonType = animType+"JSON";
+              //console.log("jsonType= "+jsonType);
+              var json = whichLottieObj.find(el => el.name === soapName)[jsonType];
+              //console.log("json: "+ json + " , " + jsonType);
+              //console.log("preLoadWorking= "+window.preLoadWorking);
+              if (json == null) {
+                  json = "loading..."
+                  //console.log("preLoadWorking egyenlő true-val");
+                  //console.log("preLoadWorking ="+window.preLoadWorking);
+                  if(preLoadWorking == true ) {
+                      preLoadWorking == false;
+                      //console.log("json ="+json)
+                      lottiePreDownload(soapName, "hover");
+                      //console.log("lottiePreDownload "+soapName, animType)
+                  } else {
+                      //console.log("json nem egyenéő null, így nem tölti újra le a "+soapName, animType);
+                      window.preLoadWorking == true
+                  }
+              } else {
+                  //console.log("preLoadWorking nem egyenlő true, így nem tölti újra le a "+soapName, animType);
+              }
+          }
         })   
     };
 
@@ -262,7 +264,7 @@
             var soapName = clickedElement.getAttribute("productName");
             window.szappan = soapName;
             var arrayID = clickedElement.getAttribute("arrayID")
-            //console.log(arrayID);
+            console.log(arrayID);
             var forHeader = clickedElement.getAttribute("forHeader");
             //lottieLoader(soapName, animType);
             lottieLoader(soapName, "hover");
@@ -291,15 +293,29 @@
       };
       if (document.getElementById("product-params") !== null) {
         if (currentPageName !== document.getElementById("product-params").getAttribute("page-name") ) {
-          document.getElementById("product-description-texts-home").innerHTML = document.getElementById("product-description-texts").innerHTML;
-          document.getElementById("when-to-use-home").innerHTML = document.getElementById("when-to-use").innerHTML;
-          document.getElementById("how-to-use-home").innerHTML = document.getElementById("how-to-use").innerHTML;
-          document.getElementById("ingredients-home").innerHTML = document.getElementById("ingredients").innerHTML;                                   
-          currentPageName = document.getElementById("product-params").getAttribute("page-name")
+          var productDescriptionTexts = document.getElementById("product-description-texts").innerHTML;
+          document.getElementById("product-description-texts-home").innerHTML = productDescriptionTexts;
+          document.getElementById("product-description-texts-home-mobil").innerHTML = productDescriptionTexts;
+          document.getElementById("product-description-texts-home-mobil").getElementsByClassName("soap-header-container")[0].setAttribute("class", "soap-header-container mobil");
+          document.getElementById("product-description-texts-home-mobil").getElementsByClassName("dividing-line-box")[0].setAttribute("class", "dividing-line-box fix");
+          document.getElementById("product-description-texts-home-mobil").getElementsByClassName("description-box")[0].setAttribute("class", "description-box mobil");
+          var whenToUse = document.getElementById("when-to-use").innerHTML;
+          document.getElementById("when-to-use-home").innerHTML = whenToUse;
+          document.getElementById("when-to-use-home-mobil").innerHTML = whenToUse;
+          var howToUse = document.getElementById("how-to-use").innerHTML;
+          document.getElementById("how-to-use-home").innerHTML = howToUse;
+          document.getElementById("how-to-use-home-mobil").innerHTML = howToUse;
+          var ingredients = document.getElementById("ingredients").innerHTML;
+          document.getElementById("ingredients-home").innerHTML = ingredients;    
+          document.getElementById("ingredients-home-mobil").innerHTML = ingredients;                                
+          currentPageName = document.getElementById("product-params").getAttribute("page-name");
+          if (mobilAspectRatio.matches) {
+            window.scrollTo(0, 0)
+          } 
         }
       };
       setTimeout(nextProductPageLoadedChecker, 100)
     };
-    nextProductPageLoadedChecker(); 
+    nextProductPageLoadedChecker();
 
 

@@ -31,23 +31,36 @@ function getCookie(cname) {
 function checkCookie() {
   var user = getCookie("userID");
   if (user != "") {
-      //console.log("cookie userID: " + user);
-      setTimeout(function(){
-          dataLayer.push({
-              userId : user
-          })
-      }, 2000)
+        //console.log("cookie userID: " + user);
+        setTimeout(function(){
+            dataLayer.push({
+                userId : user
+            })
+        }, 2000)
   } else {
-      var user = uniqueIDgen();
-      if (user != "" && user != null) {
-          setCookie("userID", user, 365);
+        var user = uniqueIDgen();
+        if (user != "" && user != null) {
+            setCookie("userID", user, 365);
+        }
+  };
+  if (window.location.href.indexOf("reset-password") > -1) {
+      console.log(URLhash);
+      if (mobilAspectRatio.matches) {
+          setTimeout(function(){ 
+              window.location.assign("https://www.bodyhoney.com/soaps/citromfuves-mezes-kecsketejes-szappan"+URLhash)
+          }, 2000);
+          //window.location.assign("https://google.com"+URLhash)
+      } else {
+            window.location.assign("https://www.bodyhoney.com"+URLhash)
       }
+  } else {
+        window.history.replaceState({}, document.title, "/")
   }
-  window.history.replaceState({}, document.title, "/")
 };
 
 function uniqueIDgen(){
   var url_string= window.location.href
+  console.log(url_string)
   var url = new URL(url_string);
   var id = url.searchParams.get("id");
   //console.log(id);
@@ -69,90 +82,151 @@ function uniqueIDgen(){
   }
 };
 
-var URLAndParams = window.location.href
+var URLAndParams = window.location.href;
+var URLhash = window.location.hash;
 
-checkCookie()
+//checkCookie();
 
 //Betöltőképernyőhöz
-
 function downloadCheckerXHR() {
     var origOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function(method, url) {
+/*    this.addEventListener('progress', function() {
+        if (mobilAspectRatio.matches == true && url == "https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5f270643d9c777ed1624cb9e_Falling_lottie_new_(70%25).json") {
+          //console.log("progress majd abort");  
+          origOpen("https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5f270643d9c777ed1624cb9e_Falling_lottie_new_(70%25).json").abort();
+        };
+      }); */
+    
       this.addEventListener('load', function() {
-        if (url == "https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5f270643d9c777ed1624cb9e_Falling_lottie_new_(70%25).json") {
+        if (mobilAspectRatio.matches == false && url == "https://uploads-ssl.webflow.com/5ef8a157cc549864e98718cc/5f270643d9c777ed1624cb9e_Falling_lottie_new_(70%25).json") {
           //console.log("letöltés ok");
-          startOpenAnimation()
+          startOpenAnimationDesktop()
           //var timestamp = Date.now();
           //console.log('XHR finished loading', timestamp, url)
+        } else if (mobilAspectRatio.matches == true){
+            startOpenAnimationMobil()
         }
       });
-      
+
       this.addEventListener('error', function() {
         var timestamp = Date.now();
         //console.log('XHR errored out', timestamp, url);
       });
       origOpen.apply(this, arguments);
+
+      /* if (isIOSDevice == true) {
+        setTimeout(function(){
+          startOpenAnimationMobil();
+          //console.log("ios eszköz értzékelve")
+        }, 3000)
+      } */
+
     };
   };
 
 downloadCheckerXHR();
 
-function startOpenAnimation() {
-    if ( window.mainLotties.rotateJSON == null ) {
-      window.mainLotties.rotateJSON = "load...";
-      lottiePreDownload("main", "rotate")
-    };
-    var focus;
-    if (/*@cc_on!@*/false) { // check for Internet Explorer
-      document.onfocusin = function(){
-        focus = true;
-        //console.log("onfocusin, "+focus)
+
+
+//Nyitó animációk:
+  //Desktop:
+      function startOpenAnimationDesktop() {
+        if ( window.mainLotties.rotateJSON == null ) {
+          window.mainLotties.rotateJSON = "load...";
+          lottiePreDownload("main", "rotate")
+        };
+        var focus;
+        if (/*@cc_on!@*/false) { // check for Internet Explorer
+          document.onfocusin = function(){
+            focus = true;
+            //console.log("onfocusin, "+focus)
+          };
+          document.onfocusout = function(){
+            focus = false;
+            //console.log("onfocusout, "+focus)
+          }
+        } else {
+          window.onfocus = function(){
+            focus = true;
+            //console.log("onfocus, "+focus)
+          };
+          window.onblur = function(){
+            focus = false;
+            //console.log("onblur, "+focus)
+          };
+        };
+        if (focus !== false) {
+            //console.log("startOpenAnimationDesktop funkción belül focus = "+focus)  
+            //console.log("start animáció indul");
+            setTimeout(function(){ 
+              document.getElementById("start-window-open").click();
+            }, 2000);
+            setTimeout(function(){ 
+              document.getElementById("start-falling-lottie").click();
+              lottiePreDownload("main", "scroll")
+              /*var whichLottieObj = window.mainLotties;
+              var json = window.mainLotties.rotateJSON;
+              lottieJSONSaver("main", "rotate", whichLottieObj, json)
+              */
+            }, 2400);
+            setTimeout(function(){ 
+              rotateLottieLoad()         
+            }, 5400);
+            setTimeout(function(){
+              // lottiePreDownload("main", "scroll");
+              document.getElementById("start-falling-lottie").click();
+              document.getElementById("second-section").style.setProperty("position", "absolute");
+              document.getElementById("triggers").style.setProperty("position", "absolute");
+              //cookieScriptLoad();          
+            }, 7400)      
+        } else {
+          setTimeout(function() {
+            //console.log("start animáció késleltetés");
+            startOpenAnimationDesktop()
+          }, 200)
+        }
       };
-      document.onfocusout = function(){
-        focus = false;
-        //console.log("onfocusout, "+focus)
-      }
-    } else {
-      window.onfocus = function(){
-        focus = true;
-        //console.log("onfocus, "+focus)
+
+  //Mobil:
+    function startOpenAnimationMobil() {
+      var focus;
+      if (/*@cc_on!@*/false) { // check for Internet Explorer
+        document.onfocusin = function(){
+          focus = true;
+          //console.log("onfocusin, "+focus)
+        };
+        document.onfocusout = function(){
+          focus = false;
+          //console.log("onfocusout, "+focus)
+        }
+      } else {
+        window.onfocus = function(){
+          focus = true;
+          //console.log("onfocus, "+focus)
+        };
+        window.onblur = function(){
+          focus = false;
+          //console.log("onblur, "+focus)
+        };
       };
-      window.onblur = function(){
-        focus = false;
-        //console.log("onblur, "+focus)
-      };
-    };
-    if (focus !== false) {
-        //console.log("startOpenAnimation funkción belül focus = "+focus)  
-        //console.log("start animáció indul");
-        setTimeout(function(){ 
-        	document.getElementById("start-window-open").click();
-        }, 2000);
-        setTimeout(function(){ 
-        	document.getElementById("start-falling-lottie").click();
-          lottiePreDownload("main", "scroll")
-          /*var whichLottieObj = window.mainLotties;
-          var json = window.mainLotties.rotateJSON;
-          lottieJSONSaver("main", "rotate", whichLottieObj, json)
-          */
-        }, 2400);
-        setTimeout(function(){ 
-          rotateLottieLoad()         
-        }, 5400);
-        setTimeout(function(){
-          // lottiePreDownload("main", "scroll");
+      if (focus !== false) {
+          //console.log("startOpenAnimationMobil funkción belül focus = "+focus)  
+          //console.log("start animáció indul");
+          document.getElementById("start-window-open").click();
           document.getElementById("start-falling-lottie").click();
           document.getElementById("second-section").style.setProperty("position", "absolute");
           document.getElementById("triggers").style.setProperty("position", "absolute");
-          //cookieScriptLoad();          
-        }, 7400)      
-    } else {
-       setTimeout(function() {
-         //console.log("start animáció késleltetés");
-         startOpenAnimation()
-       }, 200)
-    }
-  };
+          //cookieScriptLoad();               
+      } else {
+        setTimeout(function() {
+          //console.log("start animáció késleltetés");
+          startOpenAnimationMobil()
+        }, 200)
+      }
+    };
+
+//    setTimeout(function(){ startOpenAnimationMobil() }, 2000)
 
   //Lottie preloader
 function lottiePreDownload(soapName, animType) {

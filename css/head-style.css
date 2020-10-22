@@ -3,13 +3,13 @@
 /* Módosított Snipcart főszínek */
 :root {
 	--main-btn-font-color: #FFFFFF; /* betüszín módosítás, mivel a fő snipcart elem aranyra lett módosítva */
-	--main-background-color: #ffffe5;  /*   eredeti szín, ami nem csak háttérelemeket befolyásol: #f0f5f6   */
-	--main-background-color-box: #FFFBD9;  /* eredetileg fehér, bézs próba: #E8E5C5 */
+	--main-background-color: #ffffff;  /*   eredeti szín, ami nem csak háttérelemeket befolyásol: #f0f5f6   */
+	--main-background-color-box: #ffffff;  /* eredetileg fehér, bézs próba: #E8E5C5 */
 	--main-dark-color: #ba8748;
 	--main-dark-color-rgba: rgba(186, 135, 72, .3);
 	--main-light-color: #d29b34;
 	--main-light-color-rgba: rgba(210, 155, 52, .1);
-	--main-verylight-color: #fff8f0;
+	--main-verylight-color: #ffffff;
   	--product-color: #8e8f32
 }
 /* Módosított Snipcart CSS elemek */
@@ -79,14 +79,22 @@
 	border-bottom: 1px solid var(--main-background-color)
 }
 .snipcart-item-line__container {
-	background-color: var(--main-background-color-box)
+	background-color: var(--main-background-color-box);
+	padding: 16px
+}
+.snipcart-item-description {
+	line-height: 5px
 }
 .snipcart-item-quantity__button:focus path {
 	fill: var(--main-light-color)
 }
+.snipcart-item-quantity__label {
+	padding-left: 20px
+}
 .snipcart-item-quantity__quantity {
 	border: 1px solid var(--main-background-color);
-	background-color: var(--main-background-color-box)
+	background-color: var(--main-background-color-box);
+	height: 20px
 }
 .snipcart-guest-checkout__link {
 	color: var(--main-light-color)

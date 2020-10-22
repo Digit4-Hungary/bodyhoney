@@ -4,7 +4,7 @@ if (nyelv == "hu"){
   document.addEventListener('snipcart.ready', function() {
     Snipcart.api.session.setLanguage('hu', {
         actions: {
-          show: "MUTASD"
+            show: "MUTASD"
         },
         address_form: {
             address2: "Emelet/Ajtó"
@@ -32,25 +32,28 @@ if (nyelv == "hu"){
             email_instructions: "Az email-t elküldtük. Jelszó visszaállításhoz kattints a benne lévő linkre!",
             action: "EMAIL KÜLDÉSE"
         },
-        reset_password_form: {
-            title: "Jelszóvisszaállítás",
-            password: "Új jelszó",
-            confirmation_password: "Új jelszó még egyszer",
-            action: "ÚJ JELSZÓ BEÁLLÍTÁSA",
-        },
         item: {
             quantity_short: "db "
         },
         payment: {
             checkout_with: "",
             form: {
-              deferred_payment_title: "Fizetés utánvéttel",
-              deferred_payment_instructions: "A megrendelés elküldésével vállalom, hogy az áru ellenértékét átvételkor fizetem meg."
+                deferred_payment_title: "Fizetés utánvéttel",
+                deferred_payment_instructions: "A megrendelés elküldésével vállalom, hogy az áru ellenértékét átvételkor fizetem meg."
             },
             methods: {
-              deferred_payment: "Fizetés utánvéttel"  
+                deferred_payment: "Fizetés utánvéttel"  
             },
             processing_payment: "Átirányítás a fizetési oldalra. Türelem, ez eltarthat pár másodpercig is..."                 
+        },
+        reset_password_form: {
+            title: "Jelszóvisszaállítás",
+            password: "Új jelszó",
+            confirmation_password: "Új jelszó még egyszer",
+            action: "ÚJ JELSZÓ BEÁLLÍTÁSA",
+        },
+        signin_form: {
+            dont_have_an_account: "Régi vásárlóink esetén is új regisztráció szükséges!"
         }
     });
 });
@@ -273,13 +276,26 @@ function doubleClick(clickedElement) {
          beforeLeave(data) {
          	//console.log(document.getElementById("product-description-texts"))
            	//var tryNumber = 0;
-           function firstProductPageLoadedChecker () {
-             if (document.getElementById("product-description-texts") != null) {
-               document.getElementById("product-description-texts-home").innerHTML = document.getElementById("product-description-texts").innerHTML;
-               document.getElementById("when-to-use-home").innerHTML = document.getElementById("when-to-use").innerHTML;
-               document.getElementById("how-to-use-home").innerHTML = document.getElementById("how-to-use").innerHTML;
-               document.getElementById("ingredients-home").innerHTML = document.getElementById("ingredients").innerHTML               
-             } else {             	
+          function firstProductPageLoadedChecker () {
+            if (document.getElementById("product-description-texts") != null) {
+              var productDescriptionTexts = document.getElementById("product-description-texts").innerHTML;
+              document.getElementById("product-description-texts-home").innerHTML = productDescriptionTexts;
+              document.getElementById("product-description-texts-home-mobil").innerHTML = productDescriptionTexts;
+              document.getElementById("product-description-texts-home-mobil").getElementsByClassName("soap-header-container")[0].setAttribute("class", "soap-header-container mobil");
+              document.getElementById("product-description-texts-home-mobil").getElementsByClassName("dividing-line-box")[0].setAttribute("class", "dividing-line-box fix");
+              document.getElementById("product-description-texts-home-mobil").getElementsByClassName("description-box")[0].setAttribute("class", "description-box mobil");              var whenToUse = document.getElementById("when-to-use").innerHTML;
+              document.getElementById("when-to-use-home").innerHTML = whenToUse;
+              document.getElementById("when-to-use-home-mobil").innerHTML = whenToUse;
+              var howToUse = document.getElementById("how-to-use").innerHTML;
+              document.getElementById("how-to-use-home").innerHTML = howToUse;
+              document.getElementById("how-to-use-home-mobil").innerHTML = howToUse;
+              var ingredients = document.getElementById("ingredients").innerHTML;
+              document.getElementById("ingredients-home").innerHTML = ingredients;    
+              document.getElementById("ingredients-home-mobil").innerHTML = ingredients;
+              if (mobilAspectRatio.matches) {
+                window.scrollTo(0, 0)
+              }        
+            } else {             	
                   setTimeout(firstProductPageLoadedChecker, 100);
                   /*tryNumber++;
                   console.log(tryNumber)*/
@@ -291,8 +307,11 @@ function doubleClick(clickedElement) {
         namespace: 'soaps',
         beforeEnter(data) {
            document.getElementById("when-to-use-home").setAttribute("class", "when-to-use-description w-richtext");
+          // document.getElementById("when-to-use-home-mobil").setAttribute("class", "when-to-use-description w-richtext");
            document.getElementById("how-to-use-home").setAttribute("class", "when-to-use-description w-richtext");
-           document.getElementById("ingredients-home").setAttribute("class", "when-to-use-description w-richtext")           
+         //  document.getElementById("how-to-use-home-mobil").setAttribute("class", "when-to-use-description w-richtext");
+           document.getElementById("ingredients-home").setAttribute("class", "when-to-use-description w-richtext");
+         //  document.getElementById("ingredients-home-mobil").setAttribute("class", "when-to-use-description w-richtext")     
          },
         afterEnter(data) {
           var szamlalo2 = 1;
