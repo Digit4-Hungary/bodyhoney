@@ -101,9 +101,16 @@ function signInButtonOnclick2() {
        // console.log("signInButtonOnclick2() ok")
     }, 500)
 };
-//Navbar Termékek gomb javítás
+//Navbar és Footer Termékek és Bodyhoneyról gomb javítás
 var navbarProductLink = document.getElementById("navbar-product-link");
 navbarProductLink.setAttribute("onclick", "doubleClick(this)");
+var navbarAboutLink = document.getElementById("navbar-about-link");
+navbarAboutLink.setAttribute("onclick", "doubleClick(this)");
+
+var footerProductLink = document.getElementById("footer-product-link");
+footerProductLink.setAttribute("onclick", "doubleClick(this)");
+var footerAboutLink = document.getElementById("footer-about-link");
+footerAboutLink.setAttribute("onclick", "doubleClick(this)");
 
 function doubleClick(clickedElement) {
     clickedElement.click()

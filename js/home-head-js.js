@@ -213,8 +213,9 @@ downloadCheckerXHR();
       if (focus !== false) {
           //console.log("startOpenAnimationMobil funkción belül focus = "+focus)  
           //console.log("start animáció indul");
+          webfdocument.getElementById("preloader-wrapper").style.setProperty("display", "none");
           document.getElementById("start-window-open").click();
-          document.getElementById("start-falling-lottie").click();
+          //document.getElementById("start-falling-lottie").click();
           document.getElementById("second-section").style.setProperty("position", "absolute");
           document.getElementById("triggers").style.setProperty("position", "absolute");
           //cookieScriptLoad();               
